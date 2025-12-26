@@ -6,7 +6,7 @@ test('Booking flight', async({page}) => {
     const bookings = new bookingPage(page);
     const base = new basePage(page);
 
-    //Open the website
+    //Open the website and sending the url to the loadweb function
     await base.loadWeb("https://blazedemo.com/index.php")
 
     //Select destiny

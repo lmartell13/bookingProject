@@ -1,3 +1,4 @@
+//List of locators to be used
 export const bookingLocators = {
     fromPort:  'select[name="fromPort"]',
     toPort: 'select[name="toPort"]',

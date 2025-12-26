@@ -3,7 +3,7 @@ import { bookingLocators } from "./locators/bookings";
 import {Page, expect, Locator} from "@playwright/test";
 
 export class bookingPage extends basePage {
-    
+    //Will be used to stored the locators from basePage
     private readonly fromPort: Locator;
     private readonly toPort: Locator;
     private readonly submitButton: Locator;
@@ -20,7 +20,7 @@ export class bookingPage extends basePage {
 
     constructor(page: Page){
         super(page);
-
+        //Assigning every locator from basePage
         this.fromPort = page.locator(bookingLocators.fromPort);
         this.toPort = page.locator(bookingLocators.toPort);
         this.submitButton = page.locator(bookingLocators.submitButton);
@@ -38,6 +38,7 @@ export class bookingPage extends basePage {
     }
 
     async selectDestiny(){
+        //Selecting a destination
         await this.selectOpt(bookingLocators.fromPort, "Paris")
         await this.selectOpt(bookingLocators.toPort, "Buenos Aires")
         await this.clickOn(bookingLocators.submitButton)
@@ -46,6 +47,7 @@ export class bookingPage extends basePage {
     }
 
     async fillPersonalInfo(){
+        //Sending the data to every input in the form
         await this.fillField(bookingLocators.inputName, "Testing User");
         await this.fillField(bookingLocators.address, "123 Testing Av");
         await this.fillField(bookingLocators.city, "San Salvador");
@@ -59,6 +61,7 @@ export class bookingPage extends basePage {
     }
 
     async bookingConfirmation(){
+        //Assertion to validate the correct flow
         await this.expectVisible(bookingLocators.finalMessage)
     }
   
