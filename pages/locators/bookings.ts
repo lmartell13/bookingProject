@@ -13,5 +13,11 @@ export const bookingLocators = {
     cardNumber: 'input[id="creditCardNumber"]',
     cardName: 'input[id="nameOnCard"]',
     finalMessage: '//h1[text()="Thank you for your purchase today!"]',
+    
+    // New locators for price filtering
+    flightRows: 'table.table tbody tr',
+    priceColumn: 'td:nth-child(7)',
+    timeColumn: 'td:nth-child(6)',  
+    selectFlightBtn: 'input[type="submit"]'
 }
 
