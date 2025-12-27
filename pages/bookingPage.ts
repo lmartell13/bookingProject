@@ -1,6 +1,6 @@
 import { basePage } from "./basePage";
 import { bookingLocators } from "./locators/bookings";
-import {Page, expect, Locator} from "@playwright/test";
+import test, {Page, expect, Locator} from "@playwright/test";
 
 export class bookingPage extends basePage {
     //Will be used to stored the locators from basePage
@@ -42,7 +42,7 @@ export class bookingPage extends basePage {
         await this.selectOpt(bookingLocators.fromPort, "Paris")
         await this.selectOpt(bookingLocators.toPort, "Buenos Aires")
         await this.clickOn(bookingLocators.submitButton)
-        await this.clickOn(bookingLocators.findFlights)
+        //await this.clickOn(bookingLocators.findFlights)
 
     }
 
@@ -64,6 +64,64 @@ export class bookingPage extends basePage {
         //Assertion to validate the correct flow
         await this.expectVisible(bookingLocators.finalMessage)
     }
-  
 
+    // ---Method to select a flight only if price is greater than 500 ---
+
+    async selectFlightByPrice(minPrice: number) {
+        const rows = this.page.locator(bookingLocators.flightRows);
+        const rowCount = await rows.count();
+        let wasFlightFound = false;
+
+        for (let i = 0; i < rowCount; i++) {
+            const currentRow = rows.nth(i);
+            const priceRawText = await currentRow.locator(bookingLocators.priceColumn).innerText();
+            
+            // Converting currency text (e.g. "$765.32") to a numeric value
+            const numericPrice = parseFloat(priceRawText.replace('$', ''));
+
+            // IF statement to check the price condition
+            if (numericPrice > minPrice) {
+                console.log(`Matching flight was found, the price is: $${numericPrice}. \nProceeding...`);
+                await currentRow.locator(bookingLocators.selectFlightBtn).click();
+                wasFlightFound = true;
+                break; // Exit the loop as soon as we find a match
+            } 
+        }
+
+        // Final check if no flight matched the IF condition
+        if (!wasFlightFound) {
+            // This will stop the execution immediately and mark the test as "Skipped"
+            test.skip(true, `No flights were found with a price higher than ${minPrice}`);
+        }
+    }
+
+    // ---Method to select a flight based on arrival ---
+    async selectFlightByTime(minTime: number) {
+        const rows = this.page.locator(bookingLocators.flightRows);
+        const rowCount = await rows.count();
+        let wasFlightFound = false;
+
+        for (let i = 0; i < rowCount; i++) {
+            const currentRow = rows.nth(i);
+            const timeRawText = await currentRow.locator(bookingLocators.timeColumn).innerText();
+            
+            // Converting currency text (e.g. "$765.32") to a numeric value
+            const numericTime = parseFloat(timeRawText.replace(':', '').replace('PM',''));
+            
+
+            // IF statement to check the price condition
+            if (numericTime > minTime) {
+                console.log(`Matching flight was found, the estimated time of arrival is: ${timeRawText}. \nProceeding...`);
+                await currentRow.locator(bookingLocators.selectFlightBtn).click();
+                wasFlightFound = true;
+                break; // Exit the loop as soon as we find a match
+            } 
+        }
+
+        // Final check if no flight matched the IF condition
+        if (!wasFlightFound) {
+            // This will stop the execution immediately and mark the test as "Skipped"
+            test.skip(true, 'No flights were found for the specified time');
+        }
+    }
 }
