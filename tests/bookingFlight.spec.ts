@@ -18,7 +18,4 @@ test('Booking flight', async({page}) => {
     //Final assertion
     await bookings.bookingConfirmation();
 
-
-
-
 })
